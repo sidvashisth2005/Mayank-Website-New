@@ -1,12 +1,13 @@
 /* Header: difference-blended so it reads over paper, ink and photographs. */
 .site-header { position: fixed; top: 0; left: 0; right: 0; z-index: 900; height: var(--header); display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; padding: 0 var(--gutter); color: var(--paper); mix-blend-mode: difference; font-size: .82rem; }
 .site-header.is-light { mix-blend-mode: normal; color: var(--paper); }
-.wordmark { justify-self: start; font-weight: 700; letter-spacing: -.03em; cursor: pointer; }
+.wordmark { justify-self: start; font-size: 1rem; font-weight: 700; letter-spacing: -.03em; cursor: pointer; }
 .wordmark:focus-visible { outline: 2px solid currentColor; outline-offset: 6px; }
-.site-nav { display: flex; gap: 2.25rem; }
-.site-nav a { padding-bottom: .2rem; border-bottom: 1px solid transparent; }
-.site-nav a:hover { opacity: .6; }
-.site-nav a[aria-current="page"] { border-bottom-color: currentColor; }
+.site-nav { display: flex; gap: .5rem; }
+.site-nav a { display: inline-flex; align-items: center; min-height: 2.6rem; padding: .5rem 1rem; border: 1px solid transparent; font-size: .96rem; font-weight: 580; letter-spacing: -.01em; }
+.site-nav a:hover { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: .35em; }
+.site-nav a[aria-current="page"] { border-color: currentColor; }
+.site-nav a[aria-current="page"]:hover { text-decoration: none; }
 .header-cta { justify-self: end; border: 1px solid currentColor; padding: .55rem .85rem; font: 400 .64rem var(--mono); letter-spacing: .05em; text-transform: uppercase; }
 .header-cta:hover, .header-cta[aria-current="page"] { background: var(--paper); color: var(--ink); }
 .menu-toggle { display: none; justify-self: end; border: 0; border-bottom: 1px solid currentColor; border-radius: 0; background: none; padding: .35rem 0; font: 400 .68rem var(--mono); letter-spacing: .06em; text-transform: uppercase; }
