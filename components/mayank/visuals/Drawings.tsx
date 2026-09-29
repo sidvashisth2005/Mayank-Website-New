@@ -153,8 +153,6 @@ const drawings: Record<string, ReactNode> = {
   </>,
 };
 
-export type DrawingName = keyof typeof drawings;
-
 export function Drawing({ name, className = "", title }: { name: string; className?: string; title?: string }) {
   return (
     <svg className={`drawing ${className}`} viewBox="0 0 240 200" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="square" role={title ? "img" : undefined} aria-label={title} aria-hidden={title ? undefined : true} data-draw>

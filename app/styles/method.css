@@ -13,8 +13,8 @@
 .method-hero h1 em { font-size: .66em; letter-spacing: -.05em; color: var(--accent); }
 .method-hero-copy > p { max-width: 34rem; margin: 0; font-size: 1.1rem; line-height: 1.55; }
 
-.title-block { width: 100%; border-collapse: collapse; border: 1px solid var(--accent); font: 400 .66rem/1.35 var(--mono); letter-spacing: .05em; text-transform: uppercase; }
-.title-block caption { caption-side: top; padding: .55rem .7rem; background: var(--accent); color: var(--paper); font: 500 .66rem var(--mono); letter-spacing: .08em; text-align: left; text-transform: uppercase; }
+.title-block { width: 100%; border-collapse: collapse; border: 1px solid var(--accent); font: 500 .7rem/1.35 var(--mono); letter-spacing: .05em; text-transform: uppercase; }
+.title-block caption { caption-side: top; padding: .55rem .7rem; background: var(--accent); color: var(--paper); font: 500 .7rem var(--mono); letter-spacing: .08em; text-align: left; text-transform: uppercase; }
 .title-block th, .title-block td { padding: .55rem .7rem; border: 1px solid color-mix(in srgb, var(--accent) 38%, transparent); text-align: left; vertical-align: top; }
 .title-block th { width: 40%; font-weight: 400; color: var(--muted); }
 .title-block td { font-weight: 500; color: var(--ink); }
@@ -45,7 +45,7 @@
 .standards-teaser { display: grid; grid-template-columns: 8rem minmax(0, 1fr) auto; gap: 2rem; align-items: center; padding: 1.5rem 2rem; border: 2px solid #9C3D2A; color: #9C3D2A; }
 .standards-teaser .drawing { width: 8rem; }
 .standards-teaser strong { display: block; font-size: clamp(1.5rem, 2.4vw, 2.2rem); font-weight: 530; letter-spacing: -.04em; color: var(--ink); }
-.standards-teaser small { font: 500 .66rem var(--mono); letter-spacing: .05em; text-transform: uppercase; color: var(--muted); }
+.standards-teaser small { font: 500 .7rem var(--mono); letter-spacing: .05em; text-transform: uppercase; color: var(--muted); }
 .standards-teaser em { padding: .45rem .7rem; border: 2px solid currentColor; font: 500 .72rem var(--mono); font-style: normal; letter-spacing: .1em; text-transform: uppercase; transform: rotate(-4deg); }
 .standards-teaser:hover { background: color-mix(in srgb, #9C3D2A 7%, var(--paper)); }
 

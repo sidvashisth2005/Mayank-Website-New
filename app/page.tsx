@@ -1,5 +1,3 @@
-"use client";
-
 import Image from "next/image";
 import { AssetRows } from "@/components/mayank/AssetRows";
 import { TransitionLink } from "@/components/mayank/PageTransition";

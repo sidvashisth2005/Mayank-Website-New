@@ -1,11 +1,3 @@
-.openai
-.sites-runtime
-.wrangler
-build
-dist
-examples
-outputs
-scripts
-vendor
-vite.config.ts
-cloudflare-env.d.ts
+.next
+node_modules
+.env*

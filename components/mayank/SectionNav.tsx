@@ -36,6 +36,14 @@ export function SectionNav({ sections }: { sections: [string, string][] }) {
     return () => { observer.disconnect(); window.removeEventListener("scroll", onScroll); cancelAnimationFrame(frame); };
   }, [sections]);
 
+  // On narrow screens the tab row scrolls sideways; keep the active tab visible.
+  useEffect(() => {
+    const list = navRef.current?.querySelector("ol");
+    const link = list?.querySelector<HTMLElement>(`a[href="#${active}"]`);
+    if (!list || !link || list.scrollWidth <= list.clientWidth) return;
+    list.scrollTo({ left: Math.max(0, link.offsetLeft - 16), behavior: "smooth" });
+  }, [active]);
+
   return (
     <nav className="section-nav" aria-label="Record sections" ref={navRef}>
       <ol>

@@ -3,7 +3,7 @@
 .product-surface.is-compact { height: 310px; }
 .product-rail { display: flex; flex-direction: column; padding: 1rem; background: var(--ink); color: var(--paper); }
 .product-rail strong { font-size: 1.1rem; }
-.product-rail > span, .product-rail small { margin-top: .4rem; font: 400 .62rem var(--mono); }
+.product-rail > span, .product-rail small { margin-top: .4rem; font: 500 .7rem var(--mono); }
 .product-rail small { margin-top: auto; color: #9b9b94; }
 .product-tabs { display: grid; gap: .4rem; margin-top: 8vh; }
 .product-tabs button { padding: .5rem 0; border: 0; border-bottom: 1px solid transparent; background: none; color: #aaa9a3; text-align: left; font-size: .72rem; cursor: pointer; }
@@ -13,26 +13,26 @@
 .product-canvas { display: grid; grid-template-rows: auto auto 1fr; min-width: 0; min-height: 0; padding: 1.25rem; }
 .product-canvas-head { display: flex; justify-content: space-between; padding-bottom: 1rem; border-bottom: 1px solid var(--line); font-size: .7rem; }
 .product-number { padding: 2rem 0; }
-.product-number span { display: block; font: 400 .62rem var(--mono); text-transform: uppercase; color: #555; }
+.product-number span { display: block; font: 500 .7rem var(--mono); text-transform: uppercase; color: #555; }
 .product-number strong { display: block; margin-top: .35rem; font-size: clamp(2.8rem, 5vw, 5rem); letter-spacing: -.07em; line-height: 1; }
 .product-bars { height: 100%; min-height: 110px; display: flex; align-items: end; gap: clamp(3px, .55vw, 9px); border-bottom: 1px solid var(--ink); }
 .product-bars i { display: block; flex: 1; background: var(--graphite); transition: height .7s var(--ease); }
 .product-canvas > :nth-child(2):last-child { grid-row: 2 / -1; }
 
 .sample-domain { align-self: center; }
-.sample-domain > span, .sample-activity > span { display: block; font: 400 .6rem var(--mono); letter-spacing: .05em; text-transform: uppercase; color: #555; }
+.sample-domain > span, .sample-activity > span { display: block; font: 500 .7rem var(--mono); letter-spacing: .05em; text-transform: uppercase; color: #555; }
 .sample-domain strong { display: block; margin: 1.2rem 0; font-size: clamp(2.4rem, 5vw, 5.4rem); font-weight: 520; line-height: .92; letter-spacing: -.07em; overflow-wrap: anywhere; }
 .sample-domain strong em { font-family: var(--serif); font-weight: 430; color: var(--serif-tone); }
-.sample-domain small { font: 400 .62rem var(--mono); letter-spacing: .04em; text-transform: uppercase; }
+.sample-domain small { font: 500 .7rem var(--mono); letter-spacing: .04em; text-transform: uppercase; }
 .sample-identity { align-self: center; }
 .sample-identity > strong { display: block; font-size: clamp(2.4rem, 4vw, 4rem); letter-spacing: -.07em; line-height: 1; }
 .sample-identity > em { display: block; margin-top: .3rem; font-family: var(--serif); font-size: clamp(2rem, 3.2vw, 3.2rem); line-height: 1; color: var(--serif-tone); }
 .sample-identity > div { display: grid; grid-template-columns: repeat(4, 1fr); margin-top: 1.6rem; border: 1px solid var(--line); }
 .sample-identity i { position: relative; height: 5rem; }
-.sample-identity i span { position: absolute; left: .45rem; bottom: .35rem; font: 400 .55rem var(--mono); color: #fff; mix-blend-mode: difference; }
+.sample-identity i span { position: absolute; left: .45rem; bottom: .35rem; font: 500 .7rem var(--mono); color: #fff; mix-blend-mode: difference; }
 .sample-registrar { align-self: center; margin: 0; }
 .sample-registrar div { display: grid; grid-template-columns: 8rem 1fr; gap: 1rem; padding: .85rem 0; border-bottom: 1px solid var(--line); }
-.sample-registrar dt { font: 400 .6rem var(--mono); text-transform: uppercase; letter-spacing: .04em; }
+.sample-registrar dt { font: 500 .7rem var(--mono); text-transform: uppercase; letter-spacing: .04em; }
 .sample-registrar dd { margin: 0; font-size: .92rem; }
 
 .sample-components { display: flex; flex-wrap: wrap; align-content: center; align-items: center; gap: 1rem; }
@@ -41,18 +41,18 @@
 .sc-input { min-width: 13rem; padding: .6rem 0; border-bottom: 1px solid var(--ink); color: #777; font-size: .85rem; }
 .sc-toggle { position: relative; width: 2.6rem; height: 1.3rem; border: 1px solid var(--ink); }
 .sc-toggle i { position: absolute; right: 2px; top: 2px; bottom: 2px; width: 1rem; background: var(--ink); }
-.sc-tag { padding: .3rem .5rem; border: 1px solid var(--ink); font: 400 .6rem var(--mono); text-transform: uppercase; }
+.sc-tag { padding: .3rem .5rem; border: 1px solid var(--ink); font: 500 .7rem var(--mono); text-transform: uppercase; }
 .sc-tag.is-dark { background: var(--ink); color: var(--paper); }
 .sc-rule { flex-basis: 100%; height: 1px; background: var(--line); }
 .sc-slider { position: relative; width: 12rem; height: 1px; background: var(--ink); }
 .sc-slider i { position: absolute; left: 60%; top: -.4rem; width: .8rem; height: .8rem; background: var(--ink); }
 .sample-tokens { align-self: center; }
-.sample-tokens p { display: grid; grid-template-columns: 5.5rem 1fr auto; align-items: center; gap: 1rem; margin: 0; padding: .42rem 0; border-bottom: 1px solid var(--line); font: 400 .62rem var(--mono); }
+.sample-tokens p { display: grid; grid-template-columns: 5.5rem 1fr auto; align-items: center; gap: 1rem; margin: 0; padding: .42rem 0; border-bottom: 1px solid var(--line); font: 500 .7rem var(--mono); }
 .sample-tokens i { height: 1.2rem; border: 1px solid var(--line); }
 .sample-tokens b { display: block; height: .55rem; background: var(--ink); }
 .sample-states { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; align-content: center; }
 .sample-states > div { display: flex; flex-direction: column; align-items: flex-start; gap: .6rem; padding: 1rem; border: 1px solid var(--line); }
-.sample-states small { font: 400 .58rem var(--mono); text-transform: uppercase; letter-spacing: .05em; }
+.sample-states small { font: 500 .7rem var(--mono); text-transform: uppercase; letter-spacing: .05em; }
 .sample-states .is-hover .sc-button { background: #2b2d2b; }
 .sample-states .is-focus .sc-button { outline: 2px solid var(--ink); outline-offset: 3px; }
 .sample-states .is-disabled .sc-button { opacity: .4; }

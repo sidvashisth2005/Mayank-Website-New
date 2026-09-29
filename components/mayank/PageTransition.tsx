@@ -92,10 +92,6 @@ export function PageTransitionProvider({ children }: { children: ReactNode }) {
   );
 }
 
-export function usePageTransition() {
-  return useContext(TransitionContext);
-}
-
 type TransitionLinkProps = Omit<ComponentProps<typeof Link>, "href"> & { href: string; label?: string };
 
 export function TransitionLink({ href, label, onClick, children, ...rest }: TransitionLinkProps) {

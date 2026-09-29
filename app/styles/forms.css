@@ -1,7 +1,7 @@
 /* Ledger forms: every field is a ruled line, labels in mono. */
 .ledger-form { border-top: 1px solid var(--ink); }
 .ledger-form label, .wizard-field { display: block; padding: 1.3rem 0; border-bottom: 1px solid var(--ink); }
-.ledger-form label > span, .wizard-field > span { display: flex; justify-content: space-between; margin-bottom: .8rem; font: 400 .62rem var(--mono); letter-spacing: .05em; text-transform: uppercase; }
+.ledger-form label > span, .wizard-field > span { display: flex; justify-content: space-between; margin-bottom: .8rem; font: 500 .7rem var(--mono); letter-spacing: .05em; text-transform: uppercase; }
 .ledger-form label > span i, .wizard-field > span i { font-style: normal; color: var(--quiet); }
 .ledger-form input, .ledger-form select, .ledger-form textarea,
 .wizard input:not([type="checkbox"]):not([type="radio"]):not([type="file"]), .wizard select, .wizard textarea { width: 100%; padding: 0; border: 0; border-radius: 0; background: transparent; color: var(--ink); font-size: 1.15rem; outline: none; }
@@ -11,13 +11,13 @@
 .ledger-form label:focus-within, .wizard-field:focus-within { border-bottom-width: 2px; padding-bottom: calc(1.3rem - 1px); }
 .ledger-form label:focus-within > span, .wizard-field:focus-within > span { font-weight: 600; }
 .ledger-form [aria-invalid="true"], .wizard [aria-invalid="true"] { color: var(--error); }
-.field-error { display: block; margin-top: .6rem; font: 400 .64rem/1.4 var(--mono); font-style: normal; letter-spacing: .03em; text-transform: uppercase; color: var(--error); }
+.field-error { display: block; margin-top: .6rem; font: 500 .7rem/1.4 var(--mono); font-style: normal; letter-spacing: .03em; text-transform: uppercase; color: var(--error); }
 .form-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
 .form-alert { margin: 1.2rem 0 0; padding-top: 1rem; border-top: 1px solid var(--error); color: var(--error); }
 .honeypot { position: absolute !important; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
 .ledger-form .btn { margin-top: 2rem; }
 .form-receipt { padding: 2rem 0; border-top: 1px solid var(--ink); }
-.form-receipt > span { font: 400 .62rem var(--mono); letter-spacing: .05em; text-transform: uppercase; }
+.form-receipt > span { font: 500 .7rem var(--mono); letter-spacing: .05em; text-transform: uppercase; }
 .form-receipt strong { display: block; margin: 1.2rem 0; font-size: clamp(3rem, 6vw, 5.5rem); font-weight: 520; letter-spacing: -.07em; line-height: 1; }
 .form-receipt p { max-width: 34rem; margin: 0 0 1.5rem; line-height: 1.6; }
 
@@ -26,7 +26,7 @@
 .sell-needs > .label { padding: 1rem 0; }
 .sell-needs ol { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line-strong); }
 .sell-needs li { display: grid; grid-template-columns: 2.6rem 1fr; gap: .2rem .8rem; padding: 1rem 0; border-bottom: 1px solid var(--line); }
-.sell-needs li > span { grid-row: span 2; padding-top: .25rem; font: 400 .6rem var(--mono); }
+.sell-needs li > span { grid-row: span 2; padding-top: .25rem; font: 500 .7rem var(--mono); }
 .sell-needs strong { font-weight: 560; }
 .sell-needs li p { margin: 0; font-size: .86rem; line-height: 1.45; color: var(--muted); }
 .sell-needs-note { margin: 1rem 0 0; font-size: .85rem; line-height: 1.5; }
@@ -39,7 +39,7 @@
 .wizard-pending { min-height: 42rem; }
 .wizard-rail { position: sticky; top: calc(var(--header) + 2rem); list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--ink); }
 .wizard-rail button { width: 100%; display: grid; grid-template-columns: 2.4rem 1fr auto; align-items: baseline; padding: .9rem .5rem; border: 0; border-bottom: 1px solid var(--line); border-radius: 0; background: none; text-align: left; font-size: 1rem; letter-spacing: -.02em; }
-.wizard-rail button > span, .wizard-rail small { font: 400 .58rem var(--mono); letter-spacing: .05em; text-transform: uppercase; }
+.wizard-rail button > span, .wizard-rail small { font: 500 .7rem var(--mono); letter-spacing: .05em; text-transform: uppercase; }
 .wizard-rail small { color: var(--quiet); }
 .wizard-rail button:disabled { color: #a3a49f; cursor: not-allowed; }
 .wizard-rail button:hover:not(:disabled) { background: var(--soft); }
@@ -53,7 +53,7 @@
 .wizard-panel > .form-pair { border-bottom: 1px solid var(--ink); }
 .wizard-panel > .form-pair .wizard-field { border-bottom: 0; }
 .choice-set { margin: 0; padding: 0; border: 0; display: grid; grid-template-columns: 1fr 1fr; }
-.choice-set legend { grid-column: 1 / -1; margin-bottom: .9rem; padding: 0; font: 400 .62rem var(--mono); letter-spacing: .05em; text-transform: uppercase; }
+.choice-set legend { grid-column: 1 / -1; margin-bottom: .9rem; padding: 0; font: 500 .7rem var(--mono); letter-spacing: .05em; text-transform: uppercase; }
 .choice-set label { position: relative; display: flex; flex-direction: column; gap: .4rem; padding: 1.4rem 1.2rem; border: 1px solid var(--ink); cursor: pointer; }
 .choice-set label + label { border-left: 0; }
 .choice-set input { position: absolute; width: 1px; height: 1px; opacity: 0; }
@@ -71,15 +71,15 @@
 .media-drop strong { font-size: 1.3rem; font-weight: 540; letter-spacing: -.03em; }
 .media-drop span { max-width: 32rem; font-size: .9rem; color: var(--muted); }
 .media-drop input { margin-top: 1rem; font-size: .85rem; }
-.media-drop input::file-selector-button { margin-right: 1rem; padding: .7rem .9rem; border: 1px solid var(--ink); border-radius: 0; background: transparent; font: 400 .6rem var(--mono); text-transform: uppercase; cursor: pointer; }
+.media-drop input::file-selector-button { margin-right: 1rem; padding: .7rem .9rem; border: 1px solid var(--ink); border-radius: 0; background: transparent; font: 500 .7rem var(--mono); text-transform: uppercase; cursor: pointer; }
 .media-list { list-style: none; margin: 1.5rem 0 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .8rem; }
 .media-list li { padding: .5rem; border: 1px solid var(--line-strong); }
 .media-list img { width: 100%; aspect-ratio: 1; object-fit: cover; }
-.media-list span { display: block; margin: .5rem 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font: 400 .56rem var(--mono); }
-.media-list button, .review-sheet button { border: 0; border-bottom: 1px solid currentColor; background: none; padding: 0; font: 400 .58rem var(--mono); letter-spacing: .05em; text-transform: uppercase; }
+.media-list span { display: block; margin: .5rem 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font: 500 .7rem var(--mono); }
+.media-list button, .review-sheet button { border: 0; border-bottom: 1px solid currentColor; background: none; padding: 0; font: 500 .7rem var(--mono); letter-spacing: .05em; text-transform: uppercase; }
 .review-sheet { margin: 0; border-top: 1px solid var(--ink); }
 .review-sheet div { display: grid; grid-template-columns: 11rem 1fr auto; gap: 1.5rem; align-items: baseline; padding: .9rem 0; border-bottom: 1px solid var(--line); }
-.review-sheet dt { font: 400 .6rem var(--mono); letter-spacing: .05em; text-transform: uppercase; }
+.review-sheet dt { font: 500 .7rem var(--mono); letter-spacing: .05em; text-transform: uppercase; }
 .review-sheet dd { margin: 0; font-size: .95rem; line-height: 1.45; white-space: pre-wrap; overflow-wrap: anywhere; }
 .eligibility-confirm { display: grid; grid-template-columns: 1.2rem 1fr; gap: .9rem; align-items: start; padding: 1.5rem 0; cursor: pointer; }
 .eligibility-confirm input { width: 1.1rem; height: 1.1rem; margin: .15rem 0 0; accent-color: var(--ink); }
@@ -90,7 +90,7 @@
 .wizard-receipt > p { max-width: 36rem; line-height: 1.6; }
 .receipt-steps { list-style: none; margin: 2.5rem 0 0; padding: 0; max-width: 46rem; border-top: 1px solid var(--ink); }
 .receipt-steps li { display: grid; grid-template-columns: 3.5rem 1fr; gap: .3rem 1rem; padding: 1.2rem 0; border-bottom: 1px solid var(--line); }
-.receipt-steps li > span { grid-row: span 2; padding-top: .3rem; font: 400 .6rem var(--mono); }
+.receipt-steps li > span { grid-row: span 2; padding-top: .3rem; font: 500 .7rem var(--mono); }
 .receipt-steps strong { font-size: 1.2rem; font-weight: 560; }
 .receipt-steps p { margin: 0; color: var(--muted); }
 

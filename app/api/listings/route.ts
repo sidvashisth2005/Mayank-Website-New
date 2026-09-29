@@ -1,12 +1,14 @@
 import { NextResponse } from "next/server";
 import { fieldErrors, listingSchema, type SubmitResult } from "@/lib/schemas";
 import { MIN_FILL_MS, referenceId, sendMail } from "@/lib/mail";
+import { guardRequest, singleLine } from "@/lib/security";
 
 const MAX_ATTACHMENT_CHARS = 3_800_000;
 
 export async function POST(request: Request) {
-  const body = await request.json().catch(() => null);
-  const parsed = listingSchema.safeParse(body);
+  const guard = await guardRequest(request, { name: "listing", maxBytes: 4_200_000, limit: 5, windowMs: 10 * 60_000 });
+  if (!guard.ok) return guard.response;
+  const parsed = listingSchema.safeParse(guard.body);
   if (!parsed.success) {
     return NextResponse.json<SubmitResult>({ ok: false, error: "Some answers need attention.", fields: fieldErrors(parsed.error) }, { status: 422 });
   }
@@ -25,7 +27,7 @@ export async function POST(request: Request) {
 
   try {
     const mode = await sendMail({
-      subject: `New listing for review · ${listing.name} · ${ref}`,
+      subject: `New listing for review · ${singleLine(listing.name, 80)} · ${ref}`,
       replyTo: listing.email,
       rows: [
         ["Reference", ref],

@@ -84,7 +84,7 @@ export function PageMotion() {
         const format = (value: number) => `${element.dataset.prefix ?? ""}${value.toFixed(decimals)}${element.dataset.suffix ?? ""}`;
         const counter = { value: 0 };
         element.textContent = format(0);
-        gsap.to(counter, { value: target, duration: 1.4, delay: delay + 0.35, ease: "power2.out", onUpdate: () => { element.textContent = format(counter.value); }, scrollTrigger: inView(element) ? undefined : { trigger: element, start: "top 90%" } });
+        gsap.to(counter, { value: target, duration: 1.4, delay: inView(element) ? delay + 0.35 : 0, ease: "power2.out", onUpdate: () => { element.textContent = format(counter.value); }, scrollTrigger: inView(element) ? undefined : { trigger: element, start: "top 90%" } });
       });
 
       gsap.utils.toArray<HTMLElement>("[data-scramble]").forEach((element) => {

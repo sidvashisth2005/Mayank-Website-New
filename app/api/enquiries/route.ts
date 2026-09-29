@@ -2,10 +2,12 @@ import { NextResponse } from "next/server";
 import { getAsset } from "@/lib/assets";
 import { enquirySchema, fieldErrors, type SubmitResult } from "@/lib/schemas";
 import { MIN_FILL_MS, referenceId, sendMail } from "@/lib/mail";
+import { guardRequest } from "@/lib/security";
 
 export async function POST(request: Request) {
-  const body = await request.json().catch(() => null);
-  const parsed = enquirySchema.safeParse(body);
+  const guard = await guardRequest(request, { name: "enquiry", maxBytes: 20_000, limit: 10, windowMs: 10 * 60_000 });
+  if (!guard.ok) return guard.response;
+  const parsed = enquirySchema.safeParse(guard.body);
   if (!parsed.success) {
     return NextResponse.json<SubmitResult>({ ok: false, error: "Some answers need attention.", fields: fieldErrors(parsed.error) }, { status: 422 });
   }

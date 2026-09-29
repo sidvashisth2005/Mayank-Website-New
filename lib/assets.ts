@@ -238,10 +238,6 @@ export function neighbours(asset: Asset) {
   };
 }
 
-export function inkOf(key: CategoryKey) {
-  return categoryOf(key).ink;
-}
-
 // Figures shown on the market page are derived from the records, never typed in.
 export function marketStats() {
   const live = assets.filter(isAvailable);
@@ -255,10 +251,6 @@ export function marketStats() {
     available: live.length,
     averageDays: Math.round(days.reduce((sum, day) => sum + day, 0) / days.length),
   };
-}
-
-export function formatLakh(value: number) {
-  return value >= 100000 ? `₹${(value / 100000).toFixed(value % 100000 ? 2 : 0)}L` : inr.format(value);
 }
 
 export function similarTo(asset: Asset, count = 3) {

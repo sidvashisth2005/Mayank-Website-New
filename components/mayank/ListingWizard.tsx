@@ -115,6 +115,13 @@ function Wizard() {
     return () => context.revert();
   }, [step, result]);
 
+  useLayoutEffect(() => {
+    const rail = stageRef.current?.querySelector<HTMLElement>(".wizard-rail");
+    const current = rail?.querySelector<HTMLElement>(".is-current");
+    if (!rail || !current || rail.scrollWidth <= rail.clientWidth) return;
+    rail.scrollTo({ left: Math.max(0, current.offsetLeft - 16), behavior: prefersReducedMotion() ? "auto" : "smooth" });
+  }, [step]);
+
   function update(patch: Partial<Draft>) {
     const next = { ...draft, ...patch, values: { ...draft.values, ...patch.values } };
     setDraft(next);
