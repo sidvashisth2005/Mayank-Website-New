@@ -4,15 +4,13 @@ import { useLayoutEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { prefersReducedMotion } from "@/lib/scroll";
+import { loaderRemaining } from "../SiteLoader";
 
 export function HomeMotion() {
   useLayoutEffect(() => {
     const root = document.documentElement;
-    const visited = root.dataset.visited === "1";
-    try { window.sessionStorage.setItem("mayank-visited", "1"); } catch { /* private mode */ }
 
     if (prefersReducedMotion()) {
-      gsap.set(".site-loader", { display: "none" });
       root.classList.add("motion-ready");
       return;
     }
@@ -21,28 +19,19 @@ export function HomeMotion() {
     const arriving = layer && getComputedStyle(layer).visibility === "visible";
 
     const context = gsap.context(() => {
-      const entrance = gsap.timeline({ delay: visited ? (arriving ? 0.5 : 0.1) : 0 });
-      if (!visited) {
-        gsap.set(".leaf-letter", { opacity: 0, scale: 0.82 });
-        entrance.fromTo(".archive-leaf", { x: (index) => (index - 2.5) * 150, y: (index) => Math.abs(index - 2.5) * 34, rotate: (index) => (index - 2.5) * 7, opacity: 0 }, { x: 0, y: 0, rotate: 0, opacity: 1, duration: 1.05, stagger: 0.075, ease: "power4.out" })
-          .to(".archive-leaf.is-front .leaf-letter", { opacity: 1, scale: 1, duration: 0.52, ease: "power3.out" }, "-=.25")
-          .to(".archive-leaf", { x: (index) => (index - 2.5) * Math.min(185, window.innerWidth * 0.105), scaleY: 0.72, duration: 1.05, stagger: 0.03, ease: "power3.inOut" }, "+=.55")
-          .to(".archive-leaf:not(.is-front) .leaf-letter", { opacity: 1, scale: 1, duration: 0.62, stagger: 0.055, ease: "power3.out" }, "<.2")
-          .fromTo(".loader-rule", { scaleX: 0 }, { scaleX: 1, duration: 0.9, ease: "power3.inOut" }, "<")
-          .to(".site-loader", { clipPath: "inset(0 0 100% 0)", duration: 1.15, ease: "power4.inOut" }, "+=.45")
-          .set(".site-loader", { display: "none" })
-          .addLabel("hero", "-=.85");
-      } else {
-        gsap.set(".site-loader", { display: "none" });
-        entrance.addLabel("hero", 0);
-      }
+      // A full load waits for the loader to lift; in-site arrivals wait for the page shutter.
+      const waiting = loaderRemaining();
+      const entrance = gsap.timeline({ delay: waiting > 0 ? Math.max(0, waiting - 0.25) : arriving ? 0.5 : 0.1 });
+      entrance.addLabel("hero", 0);
       entrance.fromTo(".hero-visual", { clipPath: "inset(16% 12% 16% 12%)", scale: 1.08 }, { clipPath: "inset(0% 0% 0% 0%)", scale: 1, duration: 1.45, ease: "power4.out" }, "hero")
         .fromTo(".hero-line > span", { yPercent: 120 }, { yPercent: 0, duration: 1.05, stagger: 0.08, ease: "power4.out" }, "hero+=.3")
         .fromTo(".hero-statement > p, .hero-topline > *", { y: 20, opacity: 0 }, { y: 0, opacity: 1, duration: 0.7, stagger: 0.06, ease: "power3.out" }, "hero+=.55")
         .fromTo(".hero-actions > a", { y: 24, opacity: 0 }, { y: 0, opacity: 1, duration: 0.7, stagger: 0.08, ease: "power3.out" }, "hero+=.7")
         .fromTo(".hero-proof > *", { y: 18, opacity: 0 }, { y: 0, opacity: 1, duration: 0.65, stagger: 0.07 }, "hero+=.8");
 
-      gsap.to(".scroll-progress", { scaleX: 1, ease: "none", scrollTrigger: { trigger: ".home", start: "top top", end: "bottom bottom", scrub: 0.15 } });
+      // Measured over the whole document, pinned sections and footer included,
+      // so the bar reaches the end exactly when the page does.
+      gsap.fromTo(".scroll-progress", { scaleX: 0 }, { scaleX: 1, ease: "none", scrollTrigger: { start: 0, end: "max", scrub: true } });
 
       // Hero journey: the statement leaves, the archive expands, a live record opens over it.
       gsap.timeline({ scrollTrigger: { trigger: ".hero", start: "top top", end: "bottom bottom", scrub: 1.25 } })

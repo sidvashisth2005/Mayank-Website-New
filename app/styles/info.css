@@ -3,10 +3,10 @@
 .info-section > header { display: grid; grid-template-columns: minmax(0, .55fr) minmax(0, 1.45fr); gap: 1.5rem 5vw; align-items: end; margin-bottom: 4rem; }
 .info-section h2 { margin: 0; font-size: clamp(3rem, 5.6vw, 6.2rem); font-weight: 520; line-height: .88; letter-spacing: -.075em; }
 .info-section > header > p { grid-column: 2; max-width: 32rem; margin: 0; line-height: 1.6; color: var(--muted); }
-.segmented-large button { padding: 1rem 1.4rem; font-size: .64rem; }
+.segmented-large button { padding: 1.05rem 1.45rem; font-size: .76rem; }
 .track-steps { list-style: none; margin: 2.5rem 0 3rem; padding: 0; border-top: 1px solid var(--ink); }
 .track-steps li { display: grid; grid-template-columns: 5rem minmax(0, .9fr) minmax(0, 1.1fr); gap: 2rem; align-items: baseline; padding: 1.7rem 0; border-bottom: 1px solid var(--line-strong); }
-.track-steps li > span { font: 450 .62rem var(--mono); }
+.track-steps li > span { font: 400 .62rem var(--mono); }
 .track-steps strong { font-size: clamp(1.6rem, 2.6vw, 2.6rem); font-weight: 520; line-height: 1; letter-spacing: -.05em; }
 .track-steps p { max-width: 34rem; margin: 0; line-height: 1.55; color: var(--muted); }
 
@@ -15,7 +15,7 @@
 .review-point { min-height: 18rem; display: flex; flex-direction: column; padding: 1.3rem 1.5rem 1.5rem; border-right: 1px solid var(--line); }
 .review-point:first-child { padding-left: 0; }
 .review-point:last-child { border-right: 0; }
-.review-point > span { font: 450 .62rem var(--mono); letter-spacing: .045em; text-transform: uppercase; }
+.review-point > span { font: 400 .62rem var(--mono); letter-spacing: .045em; text-transform: uppercase; }
 .review-point strong { display: block; margin: auto 0 1.1rem; font-size: 1.55rem; font-weight: 560; line-height: 1.08; letter-spacing: -.04em; }
 .review-point p { margin: 0; line-height: 1.5; color: var(--muted); }
 
@@ -24,7 +24,7 @@
 .info-restricted > header > p { color: #b9bab5; }
 .decline-list { list-style: none; margin: 0 0 3rem; padding: 0; border-top: 1px solid rgba(247, 247, 245, .35); }
 .decline-list li { display: grid; grid-template-columns: 5rem 1fr; padding: 1.5rem 0; border-bottom: 1px solid rgba(247, 247, 245, .2); font-size: clamp(1.3rem, 2.2vw, 2.1rem); line-height: 1.15; letter-spacing: -.04em; }
-.decline-list span { padding-top: .5rem; font: 450 .6rem var(--mono); color: #9d9e99; }
+.decline-list span { padding-top: .5rem; font: 400 .6rem var(--mono); color: #9d9e99; }
 .decline-list p { margin: 0; }
 
 .faq-list { border-top: 1px solid var(--ink); }

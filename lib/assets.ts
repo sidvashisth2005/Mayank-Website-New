@@ -2,12 +2,12 @@
 // demonstrate the marketplace; none of them represents a real seller.
 
 export const categories = [
-  { key: "product", label: "Complete product", plural: "Complete products", note: "Working software with source, deployment notes and a founder handover." },
-  { key: "code", label: "Code & technical", plural: "Code & technical assets", note: "Repositories, APIs, SDKs and internal tools with documented history." },
-  { key: "domain", label: "Domain & identity", plural: "Domains & identity", note: "Names with registrar proof, plus the identity work built around them." },
-  { key: "design", label: "Design system", plural: "Design systems", note: "Component libraries, tokens and interface kits with licence terms." },
-  { key: "template", label: "Template", plural: "Templates", note: "Site, product and content templates sold outright or licensed." },
-  { key: "provider", label: "Provider-eligible", plural: "Provider-eligible assets", note: "App listings, pages or capacity, only where the provider permits a documented transfer." },
+  { key: "product", ink: "#9C3D2A", label: "Complete product", plural: "Complete products", note: "Working software with source, deployment notes and a founder handover." },
+  { key: "code", ink: "#3E5566", label: "Code & technical", plural: "Code & technical assets", note: "Repositories, APIs, SDKs and internal tools with documented history." },
+  { key: "domain", ink: "#8E6718", label: "Domain & identity", plural: "Domains & identity", note: "Names with registrar proof, plus the identity work built around them." },
+  { key: "design", ink: "#5D6B3C", label: "Design system", plural: "Design systems", note: "Component libraries, tokens and interface kits with licence terms." },
+  { key: "template", ink: "#4B3A4F", label: "Template", plural: "Templates", note: "Site, product and content templates sold outright or licensed." },
+  { key: "provider", ink: "#2F3130", label: "Provider-eligible", plural: "Provider-eligible assets", note: "App listings, pages or capacity, only where the provider permits a documented transfer." },
 ] as const;
 
 export type CategoryKey = (typeof categories)[number]["key"];
@@ -236,4 +236,33 @@ export function neighbours(asset: Asset) {
     previous: assets[(index - 1 + assets.length) % assets.length],
     next: assets[(index + 1) % assets.length],
   };
+}
+
+export function inkOf(key: CategoryKey) {
+  return categoryOf(key).ink;
+}
+
+// Figures shown on the market page are derived from the records, never typed in.
+export function marketStats() {
+  const live = assets.filter(isAvailable);
+  const asks = live.filter((asset) => !asset.priceUnit).map((asset) => asset.price).sort((a, b) => a - b);
+  const middle = Math.floor(asks.length / 2);
+  const median = asks.length % 2 ? asks[middle] : Math.round((asks[middle - 1] + asks[middle]) / 2);
+  const days = live.map((asset) => Number(asset.transferWindow.match(/\d+/)?.[0] ?? 0));
+  return {
+    listedValue: asks.reduce((sum, price) => sum + price, 0),
+    medianAsk: median,
+    available: live.length,
+    averageDays: Math.round(days.reduce((sum, day) => sum + day, 0) / days.length),
+  };
+}
+
+export function formatLakh(value: number) {
+  return value >= 100000 ? `₹${(value / 100000).toFixed(value % 100000 ? 2 : 0)}L` : inr.format(value);
+}
+
+export function similarTo(asset: Asset, count = 3) {
+  const same = assets.filter((other) => other !== asset && other.category === asset.category);
+  const rest = assets.filter((other) => other !== asset && other.category !== asset.category && isAvailable(other));
+  return [...same, ...rest].slice(0, count);
 }

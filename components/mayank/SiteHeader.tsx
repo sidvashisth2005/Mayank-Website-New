@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, type MouseEvent } from "react";
+import { useEffect, useRef, useState, type MouseEvent } from "react";
 import { usePathname } from "next/navigation";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { TransitionLink } from "./PageTransition";
@@ -14,6 +14,23 @@ const primary = [
 
 export function SiteHeader() {
   const pathname = usePathname();
+  const headerRef = useRef<HTMLElement>(null);
+
+  // Coloured bands marked data-header-tone="light" take a plain paper header;
+  // everywhere else the difference blend keeps it legible on paper and ink.
+  useEffect(() => {
+    const header = headerRef.current;
+    const bands = Array.from(document.querySelectorAll<HTMLElement>("[data-header-tone=\"light\"]"));
+    header?.classList.remove("is-light");
+    if (!header || !bands.length) return;
+    const visible = new Set<Element>();
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => (entry.isIntersecting ? visible.add(entry.target) : visible.delete(entry.target)));
+      header.classList.toggle("is-light", visible.size > 0);
+    }, { rootMargin: `0px 0px -${Math.max(0, window.innerHeight - 40)}px 0px` });
+    bands.forEach((band) => observer.observe(band));
+    return () => observer.disconnect();
+  }, [pathname]);
   const [open, setOpen] = useState(false);
 
   function setMenu(next: boolean) {
@@ -46,7 +63,7 @@ export function SiteHeader() {
 
   return (
     <>
-      <header className={`site-header${open ? " is-menu-open" : ""}`}>
+      <header ref={headerRef} className={`site-header${open ? " is-menu-open" : ""}`}>
         <TransitionLink className="wordmark" href="/" onClick={onWordmark} aria-label="Mayank, home">MAYANK</TransitionLink>
         <nav className="site-nav" aria-label="Primary navigation">
           {primary.map((item) => (

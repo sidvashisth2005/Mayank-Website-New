@@ -3,6 +3,9 @@
 import { useLayoutEffect, useRef, useState, useSyncExternalStore, type ChangeEvent, type FormEvent, type ReactNode } from "react";
 import gsap from "gsap";
 import { TransitionLink } from "./PageTransition";
+import { Drawing } from "./visuals/Drawings";
+import { RecordPlate, type PlateSource } from "./visuals/RecordPlate";
+import { categories } from "@/lib/assets";
 import { listingCategories, listingSchema, listingSteps, providerDependentCategories, transferReadiness, fieldErrors, type SubmitResult } from "@/lib/schemas";
 import { prefersReducedMotion, scrollToElement } from "@/lib/scroll";
 
@@ -59,6 +62,20 @@ function stepErrors(index: number, values: Values): Record<string, string> {
   if (key === "deal" && values.dealType === "Rent or license" && !values.rentPeriod) errors.rentPeriod = "Choose a rental period.";
   if (key === "contact" && values.contactMethod === "WhatsApp" && (values.whatsapp ?? "").replace(/\D/g, "").length < 10) errors.whatsapp = "Enter a WhatsApp number with country code.";
   return errors;
+}
+
+const categoryInk: Record<string, string> = {
+  "Complete product": "product", "Code or technical asset": "code", "Template or design system": "design", "Domain and identity": "domain",
+  "Social media page": "provider", "Ad account": "provider", "Cloud credits or subscription": "provider", Other: "provider",
+};
+
+// The seller sees their record plate take shape as they fill the form.
+function previewPlate(values: Values): PlateSource {
+  const name = values.name?.trim() || "Your asset";
+  const key = categoryInk[values.category ?? ""];
+  const bars = Array.from({ length: 12 }, (_, index) => 25 + ((name.charCodeAt(index % name.length) * 37 + index * 53) % 70));
+  const price = values.price ? `₹${Number(values.price).toLocaleString("en-IN")}` : undefined;
+  return { id: "MX-NEW", name, ink: categories.find((category) => category.key === key)?.ink ?? "#5f625e", bars, label: values.category || "Category pending", price };
 }
 
 function Field({ name, label, optional, error, children }: { name: string; label: string; optional?: boolean; error?: string; children: ReactNode }) {
@@ -227,6 +244,7 @@ function Wizard() {
 
   return (
     <form className="wizard" ref={stageRef as React.RefObject<HTMLFormElement>} noValidate onSubmit={submit} onFocus={() => { if (!startedAt.current) startedAt.current = Date.now(); }}>
+      <aside className="wizard-side">
       <ol className="wizard-rail" aria-label="Listing steps">
         {steps.map((item, index) => (
           <li key={item.key} className={index === step ? "is-current" : index < reached ? "is-done" : ""}>
@@ -236,11 +254,16 @@ function Wizard() {
           </li>
         ))}
       </ol>
+      <figure className="wizard-preview">
+        <RecordPlate source={previewPlate(values)} variant="stamp" title={`Preview of the record plate for ${values.name || "your asset"}`} />
+        <figcaption>Your record, as it will be filed{values.price ? ` / ₹${Number(values.price).toLocaleString("en-IN")}` : ""}</figcaption>
+      </figure>
+      </aside>
 
       <div className="wizard-stage">
         <i className="wizard-leaf" /><i className="wizard-leaf" />
         <div className="wizard-panel" key={step}>
-          <header className="wizard-head"><span className="label">{String(step + 1).padStart(2, "0")} / {current.title}</span><h2>{current.heading}</h2></header>
+          <header className="wizard-head"><div><span className="label">{String(step + 1).padStart(2, "0")} / {current.title}</span><h2>{current.heading}</h2></div><Drawing name={current.key} className="wizard-drawing" /></header>
 
           {current.key === "asset" && <>
             <Field name="name" label="Asset name" error={errors.name}><input {...input("name", { placeholder: "What did you build?", autoComplete: "off" })} /></Field>

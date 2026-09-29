@@ -17,13 +17,6 @@ export default function Home() {
   return (
     <>
       <HomeMotion />
-      <div className="site-loader" aria-hidden="true">
-        <div className="loader-register"><span>Edition 01</span><span>Useful work / Registered</span></div>
-        <div className="loader-archive">
-          {"MAYANK".split("").map((letter, index) => <i key={index} className={`archive-leaf${index === 0 ? " is-front" : ""}`}><span className="leaf-letter">{letter}</span></i>)}
-        </div>
-        <div className="loader-rule" />
-      </div>
       <div className="scroll-progress" aria-hidden="true" />
 
       <main id="main" tabIndex={-1} className="home">

@@ -16,6 +16,8 @@ export function SmoothScroll() {
     gsap.ticker.add(tick);
     gsap.ticker.lagSmoothing(0);
     setLenis(lenis);
+    // The loader may already hold the page still; respect that until it lifts.
+    if (document.documentElement.classList.contains("is-scroll-locked")) lenis.stop();
     // Keep the scroll limit in step with route changes and late layout.
     const resize = () => lenis.resize();
     const observer = new ResizeObserver(resize);

@@ -3,6 +3,7 @@
 import { useLayoutEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { TransitionLink } from "./PageTransition";
+import { Drawing } from "./visuals/Drawings";
 import { prefersReducedMotion } from "@/lib/scroll";
 
 const tracks = {
@@ -32,6 +33,8 @@ const tracks = {
 
 type Track = keyof typeof tracks;
 
+const drawingsFor: Record<Track, string[]> = { buyer: ["search", "evidence", "contact", "ownership", "route"], seller: ["asset", "identity", "publish", "contact", "provider"] };
+
 export function TrackToggle() {
   const [track, setTrack] = useState<Track>("buyer");
   const listRef = useRef<HTMLOListElement>(null);
@@ -52,7 +55,7 @@ export function TrackToggle() {
       </div>
       <ol className="track-steps" id="track-panel" role="tabpanel" ref={listRef}>
         {current.steps.map(([title, copy], index) => (
-          <li key={`${track}-${title}`}><span>{String(index + 1).padStart(2, "0")}</span><strong>{title}</strong><p>{copy}</p></li>
+          <li key={`${track}-${title}`}><span>{String(index + 1).padStart(2, "0")}</span><strong>{title}</strong><p>{copy}</p><Drawing name={drawingsFor[track][index]} className="track-drawing" /></li>
         ))}
       </ol>
       <TransitionLink className="btn btn-solid" href={current.cta.href}>{current.cta.text}<span>{track === "buyer" ? "Sample edition" : "Private review first"}</span></TransitionLink>
