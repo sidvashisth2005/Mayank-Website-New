@@ -1,5 +1,6 @@
 // Edition 01 inventory. Every record here is a sample listing used to
 // demonstrate the marketplace; none of them represents a real seller.
+import { moreAssets } from "./catalogue/edition-two";
 
 export const categories = [
   { key: "product", ink: "#9C3D2A", label: "Complete product", plural: "Complete products", note: "Working software with source, deployment notes and a founder handover." },
@@ -43,7 +44,7 @@ export type Asset = {
   specimen: { image: "object" | "detail"; position: string };
 };
 
-export const assets: Asset[] = [
+const editionOne: Asset[] = [
   {
     id: "MX-024", slug: "kite", name: "Kite", type: "Analytics product", category: "product", deal: "sell", status: "live",
     price: 185000, ageMonths: 18, listed: "2026-09-21",
@@ -196,6 +197,8 @@ export const assets: Asset[] = [
   },
 ];
 
+export const assets: Asset[] = [...editionOne, ...moreAssets];
+
 export const editionPicks = ["kite", "northstar", "relay", "atlas"];
 
 export function getAsset(slug: string) {
@@ -257,4 +260,9 @@ export function similarTo(asset: Asset, count = 3) {
   const same = assets.filter((other) => other !== asset && other.category === asset.category);
   const rest = assets.filter((other) => other !== asset && other.category !== asset.category && isAvailable(other));
   return [...same, ...rest].slice(0, count);
+}
+
+// Screens captured from the image studio (scripts/capture-specimens.mjs).
+export function galleryFor(asset: Asset) {
+  return [1, 2, 3].map((n) => `/assets/${asset.slug}/${n}.jpg`);
 }

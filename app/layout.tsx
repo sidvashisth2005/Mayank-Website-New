@@ -4,12 +4,16 @@ import "@fontsource-variable/newsreader";
 import "@fontsource/ibm-plex-mono/400.css";
 import "@fontsource/ibm-plex-mono/500.css";
 import "./globals.css";
+import { ClerkProvider } from "@clerk/nextjs";
 import { PageTransitionProvider } from "@/components/mayank/PageTransition";
 import { SiteHeader } from "@/components/mayank/SiteHeader";
 import { SiteFooter } from "@/components/mayank/SiteFooter";
 import { SiteLoader } from "@/components/mayank/SiteLoader";
 import { SmoothScroll } from "@/components/mayank/SmoothScroll";
+import { QuickSearch } from "@/components/mayank/QuickSearch";
+import { searchEntries } from "@/lib/search-index";
 import { siteUrl } from "@/lib/site";
+import { clerkAppearance } from "@/lib/clerk-appearance";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -37,14 +41,24 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <script dangerouslySetInnerHTML={{ __html: visitScript }} />
       </head>
       <body>
-        <a className="skip-link" href="#main">Skip to content</a>
-        <PageTransitionProvider>
-          <SiteLoader />
-          <SmoothScroll />
-          <SiteHeader />
-          {children}
-          <SiteFooter />
-        </PageTransitionProvider>
+        <ClerkProvider
+          appearance={clerkAppearance}
+          signInUrl="/sign-in"
+          signUpUrl="/sign-up"
+          signInFallbackRedirectUrl="/dashboard"
+          signUpFallbackRedirectUrl="/dashboard"
+          afterSignOutUrl="/"
+        >
+          <a className="skip-link" href="#main">Skip to content</a>
+          <PageTransitionProvider>
+            <SiteLoader />
+            <SmoothScroll />
+            <SiteHeader />
+            {children}
+            <SiteFooter />
+            <QuickSearch entries={searchEntries} />
+          </PageTransitionProvider>
+        </ClerkProvider>
       </body>
     </html>
   );

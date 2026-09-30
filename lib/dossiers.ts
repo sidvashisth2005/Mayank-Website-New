@@ -1,6 +1,8 @@
 // Sample dossier detail for each Edition 01 record. Like the records
 // themselves, these are illustrative and do not describe real sellers.
 
+import { moreDossiers } from "./catalogue/edition-two";
+
 export type EvidenceStatus = "Verified" | "Provided" | "On request";
 
 export type Dossier = {
@@ -15,7 +17,7 @@ export type Dossier = {
   faq: [string, string][];
 };
 
-export const dossiers: Record<string, Dossier> = {
+const editionOneDossiers: Record<string, Dossier> = {
   kite: {
     highlights: ["1,284 active accounts", "Stripe billing import built in", "21-day founder handover"],
     series: { label: "Active accounts, last 12 months", values: [612, 688, 704, 790, 812, 905, 988, 1010, 1102, 1150, 1231, 1284] },
@@ -122,6 +124,8 @@ export const dossiers: Record<string, Dossier> = {
     faq: [["When will it be available again?", "When the current licence ends. Ask to be told and the review desk will write to you."]],
   },
 };
+
+export const dossiers: Record<string, Dossier> = { ...editionOneDossiers, ...moreDossiers };
 
 export function getDossier(slug: string): Dossier {
   return dossiers[slug];

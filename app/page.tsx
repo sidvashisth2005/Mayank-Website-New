@@ -5,13 +5,19 @@ import { ProductSurface } from "@/components/mayank/ProductSurface";
 import { CategoryLeaves } from "@/components/mayank/home/CategoryLeaves";
 import { HomeMotion } from "@/components/mayank/home/HomeMotion";
 import { TransferReel } from "@/components/mayank/home/TransferReel";
+import { Testimonials } from "@/components/mayank/Testimonials";
+import { testimonialsToShow } from "@/lib/server/voices";
 import { assets, getAsset } from "@/lib/assets";
 
 const kite = getAsset("kite")!;
 const latest = [...assets].filter((asset) => asset.status === "live").sort((a, b) => b.listed.localeCompare(a.listed)).slice(0, 6);
 const available = assets.filter((asset) => asset.status === "live").length;
 
-export default function Home() {
+// Published testimonials are read from the database; rebuild at most every five minutes.
+export const revalidate = 300;
+
+export default async function Home() {
+  const voices = await testimonialsToShow();
   return (
     <>
       <HomeMotion />
@@ -106,6 +112,8 @@ export default function Home() {
             </div>
           </div>
         </section>
+
+        <Testimonials items={voices.slice(0, 4)} index="06 / In their words" title={<>Said about<br /><em>Mayank.</em></>} lead="Founders who listed, and teams who bought or licensed. Every entry is moderated before it appears." />
 
         <section className="closing">
           <p className="closing-kicker">The useful part can continue.</p>

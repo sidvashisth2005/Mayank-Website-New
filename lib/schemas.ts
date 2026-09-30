@@ -105,7 +105,7 @@ export const listingSchema = listingSteps.asset
 export const enquiryIntents = ["Buy outright", "Rent or licence", "Ask about similar assets", "Ask a question"] as const;
 
 export const enquirySchema = z.object({
-  asset: z.string().max(40),
+  asset: z.string().max(60),
   name: text(1, 80, "Enter your name."),
   email,
   company: z.string().trim().max(120).default(""),
@@ -116,7 +116,7 @@ export const enquirySchema = z.object({
   startedAt: z.number().int().nonnegative(),
 });
 
-export type SubmitResult = { ok: true; ref: string; mode: "sent" | "demo" } | { ok: false; error: string; fields?: Record<string, string> };
+export type SubmitResult = { ok: true; ref: string; mode: "sent" | "demo"; id?: string } | { ok: false; error: string; fields?: Record<string, string> };
 
 export function fieldErrors(error: z.ZodError) {
   const fields: Record<string, string> = {};

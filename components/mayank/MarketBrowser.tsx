@@ -1,6 +1,7 @@
 "use client";
 
 import { useLayoutEffect, useMemo, useRef, type CSSProperties } from "react";
+import Image from "next/image";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import gsap from "gsap";
 import { Flip } from "gsap/Flip";
@@ -8,7 +9,7 @@ import { AssetRows } from "./AssetRows";
 import { TransitionLink } from "./PageTransition";
 import { Drawing } from "./visuals/Drawings";
 import { RecordPlate, plateFrom } from "./visuals/RecordPlate";
-import { assets, categories, categoryOf, dealLabel, formatPrice, statusLabel, type Asset, type CategoryKey } from "@/lib/assets";
+import { assets, categories, categoryOf, dealLabel, formatPrice, galleryFor, statusLabel, type Asset, type CategoryKey } from "@/lib/assets";
 import { getDossier } from "@/lib/dossiers";
 import { prefersReducedMotion } from "@/lib/scroll";
 import { useStuck } from "./useStuck";
@@ -73,7 +74,8 @@ function SpecimenGrid({ items }: { items: Asset[] }) {
           <li key={asset.slug} data-flip-id={asset.slug} className={asset.status !== "live" ? "is-closed" : ""} style={{ "--cat": categoryOf(asset.category).ink } as CSSProperties}>
             <TransitionLink href={`/market/${asset.slug}`} className="specimen-card">
               <div className="specimen-cover">
-                <RecordPlate source={plateFrom(asset)} variant="cover" title="" />
+                <div className="specimen-shot"><Image src={galleryFor(asset)[0]} alt={`${asset.name}, main screen`} fill sizes="(max-width: 640px) 92vw, (max-width: 980px) 46vw, 31vw" /></div>
+                <RecordPlate source={plateFrom(asset)} variant="thumb" title="" className="specimen-badge" />
                 {asset.status !== "live" && <b className="record-stamp">{statusLabel[asset.status]}</b>}
               </div>
               <div className="specimen-card-meta">

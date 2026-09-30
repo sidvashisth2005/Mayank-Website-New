@@ -6,6 +6,8 @@ import { TrackToggle } from "@/components/mayank/TrackToggle";
 import { Drawing } from "@/components/mayank/visuals/Drawings";
 import { assets, isAvailable } from "@/lib/assets";
 import { dossiers } from "@/lib/dossiers";
+import { Testimonials } from "@/components/mayank/Testimonials";
+import { testimonialsToShow } from "@/lib/server/voices";
 
 export const metadata: Metadata = {
   title: "How it works",
@@ -51,7 +53,10 @@ function editionFigures() {
   };
 }
 
-export default function HowItWorksPage() {
+export const revalidate = 300;
+
+export default async function HowItWorksPage() {
+  const voices = await testimonialsToShow();
   const figures = editionFigures();
   return (
     <main id="main" tabIndex={-1} className="method-page" style={{ "--accent": "#3E5566" } as CSSProperties}>
@@ -120,6 +125,8 @@ export default function HowItWorksPage() {
           ))}
         </div>
       </section>
+
+      <Testimonials items={voices} index="Voices / Both tracks" title={<>How it went,<br /><em>on the record.</em></>} lead="Sellers on the review, buyers on the handover. Published after moderation." />
 
       <section className="info-cta">
         <TransitionLink className="btn btn-accent" href="/market">Browse the market<span>Buyer</span></TransitionLink>

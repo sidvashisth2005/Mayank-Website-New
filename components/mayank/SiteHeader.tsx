@@ -4,6 +4,8 @@ import { useEffect, useRef, useState, type MouseEvent } from "react";
 import { usePathname } from "next/navigation";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { TransitionLink } from "./PageTransition";
+import { AccountLink } from "./account/AccountLink";
+import { openQuickSearch } from "./QuickSearch";
 import { jumpToTop, lockScroll } from "@/lib/scroll";
 
 const primary = [
@@ -70,7 +72,11 @@ export function SiteHeader() {
             <TransitionLink key={item.href} href={item.href} aria-current={isActive(item.href) ? "page" : undefined}>{item.label}</TransitionLink>
           ))}
         </nav>
-        <TransitionLink className="header-cta" href="/sell" aria-current={isActive("/sell") ? "page" : undefined}>List an asset</TransitionLink>
+        <div className="header-actions">
+          <button type="button" className="header-search" onClick={openQuickSearch} aria-label="Search, shortcut Control K">Search<kbd>Ctrl K</kbd></button>
+          <AccountLink className="header-account" />
+          <TransitionLink className="header-cta" href="/sell" aria-current={isActive("/sell") ? "page" : undefined}>List an asset</TransitionLink>
+        </div>
         <button type="button" className="menu-toggle" aria-expanded={open} aria-controls="site-menu" onClick={() => setMenu(!open)}>{open ? "Close" : "Menu"}</button>
       </header>
       <div className="site-menu" id="site-menu" data-open={open} aria-hidden={!open} inert={!open}>
@@ -80,6 +86,8 @@ export function SiteHeader() {
           <TransitionLink href="/market" onClick={() => setMenu(false)}>Browse the market</TransitionLink>
           <TransitionLink href="/sell" onClick={() => setMenu(false)}>List an asset</TransitionLink>
           <TransitionLink href="/how-it-works" onClick={() => setMenu(false)}>How it works</TransitionLink>
+          <AccountLink long onNavigate={() => setMenu(false)} />
+          <button type="button" className="site-menu-search" onClick={() => { setMenu(false); openQuickSearch(); }}>Search records</button>
           <div className="site-menu-minor">
             <TransitionLink href="/restricted-assets" onClick={() => setMenu(false)}>Restricted assets</TransitionLink>
             <TransitionLink href="/terms" onClick={() => setMenu(false)}>Terms</TransitionLink>

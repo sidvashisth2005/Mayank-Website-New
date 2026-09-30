@@ -182,3 +182,6 @@
   .hero-stage { position: relative; height: 100svh; }
   .hero-live-record { display: none; }
 }
+
+/* The steps slide in from the right; clip them so phones never scroll sideways */
+.seller-band { overflow: hidden; }

@@ -8,6 +8,15 @@ import { prefersReducedMotion } from "@/lib/scroll";
 
 const picks = editionPicks.map((slug) => assets.find((asset) => asset.slug === slug)!);
 
+// A drawn arrow in the site's line hand; direction flips it for "previous".
+function Arrow({ direction }: { direction: "left" | "right" }) {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="square" style={{ transform: direction === "left" ? "scaleX(-1)" : undefined }}>
+      <path d="M3 12 H20 M14 6 L20 12 L14 18" />
+    </svg>
+  );
+}
+
 export function TransferReel() {
   const [index, setIndex] = useState(0);
   const viewportRef = useRef<HTMLDivElement>(null);
@@ -28,8 +37,6 @@ export function TransferReel() {
         <p>A compact view of what actually transfers, not a gallery of logos. Move through the edition to compare condition, price and handover route.</p>
         <div className="carousel-controls">
           <span aria-live="polite">{String(index + 1).padStart(2, "0")} / {String(picks.length).padStart(2, "0")}</span>
-          <button type="button" onClick={() => goTo(index - 1)}>Previous record</button>
-          <button type="button" onClick={() => goTo(index + 1)}>Next record</button>
         </div>
       </div>
       <div
@@ -61,6 +68,15 @@ export function TransferReel() {
             </figure>
           </article>
         ))}
+      </div>
+      <div className="carousel-pager">
+        <button type="button" className="carousel-arrow" aria-label="Previous record" onClick={() => goTo(index - 1)}><Arrow direction="left" /></button>
+        <div className="carousel-dots" role="group" aria-label="Choose a record">
+          {picks.map((asset, dotIndex) => (
+            <button key={asset.slug} type="button" aria-label={`Show ${asset.name}, record ${dotIndex + 1} of ${picks.length}`} aria-current={dotIndex === index ? "true" : undefined} onClick={() => goTo(dotIndex)} />
+          ))}
+        </div>
+        <button type="button" className="carousel-arrow" aria-label="Next record" onClick={() => goTo(index + 1)}><Arrow direction="right" /></button>
       </div>
     </section>
   );

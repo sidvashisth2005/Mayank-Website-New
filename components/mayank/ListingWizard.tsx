@@ -2,10 +2,11 @@
 
 import { useLayoutEffect, useRef, useState, useSyncExternalStore, type ChangeEvent, type FormEvent, type ReactNode } from "react";
 import gsap from "gsap";
+import { useAuth } from "@clerk/nextjs";
 import { TransitionLink } from "./PageTransition";
 import { Drawing } from "./visuals/Drawings";
 import { RecordPlate, type PlateSource } from "./visuals/RecordPlate";
-import { categories } from "@/lib/assets";
+import { listingPlate } from "@/lib/member-plate";
 import { listingCategories, listingSchema, listingSteps, providerDependentCategories, transferReadiness, fieldErrors, type SubmitResult } from "@/lib/schemas";
 import { prefersReducedMotion, scrollToElement } from "@/lib/scroll";
 
@@ -25,7 +26,7 @@ const steps = [
 type Values = Record<string, string>;
 type Image = { filename: string; type: string; content: string; preview: string };
 type Draft = { values: Values; step: number; reached: number };
-type Result = { ref: string; mode: "sent" | "demo"; method: string };
+type Result = { ref: string; mode: "sent" | "demo"; method: string; id?: string };
 
 const emptyDraft: Draft = { values: { contactMethod: "Email", rentPeriod: "" }, step: 0, reached: 0 };
 
@@ -64,18 +65,10 @@ function stepErrors(index: number, values: Values): Record<string, string> {
   return errors;
 }
 
-const categoryInk: Record<string, string> = {
-  "Complete product": "product", "Code or technical asset": "code", "Template or design system": "design", "Domain and identity": "domain",
-  "Social media page": "provider", "Ad account": "provider", "Cloud credits or subscription": "provider", Other: "provider",
-};
-
 // The seller sees their record plate take shape as they fill the form.
 function previewPlate(values: Values): PlateSource {
-  const name = values.name?.trim() || "Your asset";
-  const key = categoryInk[values.category ?? ""];
-  const bars = Array.from({ length: 12 }, (_, index) => 25 + ((name.charCodeAt(index % name.length) * 37 + index * 53) % 70));
-  const price = values.price ? `₹${Number(values.price).toLocaleString("en-IN")}` : undefined;
-  return { id: "MX-NEW", name, ink: categories.find((category) => category.key === key)?.ink ?? "#5f625e", bars, label: values.category || "Category pending", price };
+  const plate = listingPlate({ name: values.name ?? "", category: values.category ?? "" });
+  return { ...plate, price: values.price ? `₹${Number(values.price).toLocaleString("en-IN")}` : undefined };
 }
 
 function Field({ name, label, optional, error, children }: { name: string; label: string; optional?: boolean; error?: string; children: ReactNode }) {
@@ -89,6 +82,7 @@ function Field({ name, label, optional, error, children }: { name: string; label
 }
 
 function Wizard() {
+  const { isSignedIn } = useAuth();
   const [draft, setDraft] = useState<Draft>(readDraft);
   const [images, setImages] = useState<Image[]>([]);
   const [imageNote, setImageNote] = useState("");
@@ -191,7 +185,7 @@ function Wizard() {
       const response = await fetch("/api/listings", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(parsed.data) });
       const outcome = (await response.json()) as SubmitResult;
       if (outcome.ok) {
-        setResult({ ref: outcome.ref, mode: outcome.mode, method: values.contactMethod });
+        setResult({ ref: outcome.ref, mode: outcome.mode, method: values.contactMethod, id: outcome.id });
         try { window.localStorage.removeItem(DRAFT_KEY); } catch { /* ignore */ }
       } else setAlert(outcome.error);
     } catch {
@@ -221,17 +215,17 @@ function Wizard() {
           <div className="wizard-panel wizard-receipt" role="status">
             <span className="label">Listing received / Private review</span>
             <strong className="receipt-ref">{result.ref}</strong>
-            {result.mode === "sent"
-              ? <p>Your asset has reached the Mayank review desk. It has not been published. Keep this reference for any follow-up.</p>
-              : <p><b>Demo mode.</b> This deployment has no inbox configured yet, so the listing was checked but not sent anywhere. Nothing was published.</p>}
+            <p>Your asset is filed with the Mayank review desk. It has not been published. Follow every step of the review from your desk.</p>
             <ol className="receipt-steps">
               <li><span>01</span><strong>Private review</strong><p>Identity, ownership, condition and the transfer route are checked.</p></li>
-              <li><span>02</span><strong>Questions, if any</strong><p>The review desk replies by {result.method === "WhatsApp" ? "WhatsApp" : "email"} with anything it needs.</p></li>
+              <li><span>02</span><strong>Questions, if any</strong><p>Notes from the review desk appear on the record in your desk, and by {result.method === "WhatsApp" ? "WhatsApp" : "email"} when needed.</p></li>
               <li><span>03</span><strong>Publication</strong><p>Nothing is published until the review is complete.</p></li>
             </ol>
             <div className="wizard-actions">
-              <button type="button" className="btn btn-outline" onClick={restart}>List another asset</button>
-              <TransitionLink href="/market" className="text-link">Browse the market</TransitionLink>
+              {result.id
+                ? <TransitionLink href={`/dashboard/listings/${result.id}`} className="btn btn-solid">Track it in your desk<span>Progress and review notes</span></TransitionLink>
+                : <TransitionLink href="/dashboard/listings" className="btn btn-solid">Open your desk<span>Progress and review notes</span></TransitionLink>}
+              <button type="button" className="btn btn-outline" onClick={restart}>List another asset<span>Starts a new draft</span></button>
             </div>
           </div>
         </div>
@@ -350,6 +344,7 @@ function Wizard() {
               <span>I confirm that I have the right to offer this asset and understand that provider-dependent assets require separate eligibility review.</span>
             </label>
             {errors.eligibility && <em className="field-error">{errors.eligibility}</em>}
+            {isSignedIn === false && <p className="wizard-notice">Listings are filed to a member desk so you can follow the review. Sign in or create a free account to send. Images need to be added again after signing in.</p>}
           </>}
 
           <label className="honeypot" aria-hidden="true"><span>Website</span><input name="website" tabIndex={-1} autoComplete="off" value={values.website ?? ""} onChange={onChange} /></label>
@@ -357,10 +352,12 @@ function Wizard() {
 
           <div className="wizard-actions">
             {step > 0 && <button type="button" className="btn btn-outline" onClick={() => goTo(step - 1)}>Back</button>}
-            <button type="submit" className="btn btn-solid" disabled={sending}>
-              {current.key === "review" ? (sending ? "Sending for review" : "Send for private review") : `Continue to ${steps[step + 1].title.toLowerCase()}`}
-              <span>{current.key === "review" ? "Nothing publishes automatically" : "Draft saved on this device"}</span>
-            </button>
+            {current.key === "review" && isSignedIn === false
+              ? <TransitionLink className="btn btn-solid" href="/sign-in?redirect_url=%2Fsell">Sign in to send<span>Your answers stay saved here</span></TransitionLink>
+              : <button type="submit" className="btn btn-solid" disabled={sending || (current.key === "review" && !isSignedIn)}>
+                  {current.key === "review" ? (sending ? "Sending for review" : "Send for private review") : `Continue to ${steps[step + 1].title.toLowerCase()}`}
+                  <span>{current.key === "review" ? "Nothing publishes automatically" : "Draft saved on this device"}</span>
+                </button>}
           </div>
         </div>
       </div>

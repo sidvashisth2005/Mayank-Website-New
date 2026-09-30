@@ -3,21 +3,29 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { EnquiryForm } from "@/components/mayank/EnquiryForm";
+import { SaveButton } from "@/components/mayank/account/SaveButton";
+import { StickyEnquiry } from "@/components/mayank/StickyEnquiry";
+import { ProductReviews } from "@/components/mayank/ProductReviews";
+import { reviewsFor } from "@/lib/server/voices";
+import { ShareButton } from "@/components/mayank/account/ShareButton";
+import { Gallery } from "@/components/mayank/Gallery";
+import { studio } from "@/lib/catalogue/studio";
 import { PageMotion } from "@/components/mayank/PageMotion";
 import { TransitionLink } from "@/components/mayank/PageTransition";
 import { ProductSurface } from "@/components/mayank/ProductSurface";
 import { ScrollLink } from "@/components/mayank/ScrollLink";
 import { SectionNav } from "@/components/mayank/SectionNav";
-import { specimenSrc } from "@/components/mayank/Specimen";
 import { Chart } from "@/components/mayank/visuals/Chart";
 import { Drawing } from "@/components/mayank/visuals/Drawings";
 import { RecordPlate, plateFrom } from "@/components/mayank/visuals/RecordPlate";
-import { assets, categoryOf, dealLabel, formatAge, formatPrice, getAsset, neighbours, recordNumber, similarTo, statusLabel } from "@/lib/assets";
+import { assets, categoryOf, dealLabel, formatAge, formatPrice, galleryFor, getAsset, neighbours, recordNumber, similarTo, statusLabel } from "@/lib/assets";
 import { getDossier } from "@/lib/dossiers";
 
 type Props = { params: Promise<{ slug: string }> };
 
-export const dynamicParams = false;
+// Unknown slugs fall through to notFound() below. (dynamicParams = false made
+// pages answer 404 after an on-demand revalidation.)
+export const dynamicParams = true;
 
 export function generateStaticParams() {
   return assets.map((asset) => ({ slug: asset.slug }));
@@ -29,7 +37,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return { title: `${asset.name}, ${asset.type}`, description: asset.description };
 }
 
-const sections: [string, string][] = [["sample", "Sample"], ["numbers", "Numbers"], ["condition", "Condition"], ["evidence", "Evidence"], ["route", "Route"], ["seller", "Seller"], ["enquire", "Enquire"]];
+const sections: [string, string][] = [["screens", "Screens"], ["sample", "Sample"], ["numbers", "Numbers"], ["condition", "Condition"], ["evidence", "Evidence"], ["route", "Route"], ["seller", "Seller"], ["reviews", "Reviews"], ["enquire", "Enquire"]];
 
 export default async function AssetPage({ params }: Props) {
   const asset = getAsset((await params).slug);
@@ -39,6 +47,7 @@ export default async function AssetPage({ params }: Props) {
   const category = categoryOf(asset.category);
   const closed = asset.status !== "live";
   const similar = similarTo(asset);
+  const reviews = await reviewsFor(asset.slug);
   const route = [
     ["Enquiry accepted", "Mayank introduces you privately once the seller's identity has been confirmed."],
     ["Evidence shared", asset.access + "."],
@@ -68,7 +77,7 @@ export default async function AssetPage({ params }: Props) {
           <ul className="asset-highlights" data-rise>{dossier.highlights.map((item) => <li key={item}>{item}</li>)}</ul>
         </div>
         <div className="asset-collage" data-crop>
-          <div className="collage-photo"><Image src={specimenSrc(asset)} alt="" fill sizes="(max-width: 980px) 60vw, 26vw" style={{ objectPosition: asset.specimen.position }} /></div>
+          <div className="collage-photo"><Image src={galleryFor(asset)[0]} alt="" fill priority sizes="(max-width: 980px) 60vw, 26vw" /></div>
           <RecordPlate source={plateFrom(asset)} variant="cover" className="collage-plate" />
           <Drawing name={asset.category} className="collage-drawing" />
           {closed && <b className="record-stamp">{statusLabel[asset.status]}</b>}
@@ -85,13 +94,18 @@ export default async function AssetPage({ params }: Props) {
 
       <div className="asset-body">
         <div className="asset-main">
+          <section className="asset-section" id="screens">
+            <header data-reveal><span>01</span><h2>Screens</h2><p>Captured from the working product. Open any screen full size; use the arrow keys or swipe to move between them.</p></header>
+            <div data-reveal><Gallery name={asset.name} shots={galleryFor(asset).map((src, index) => ({ src, alt: studio[asset.slug]?.views[index] ?? `Screen ${index + 1}` }))} /></div>
+          </section>
+
           <section className="asset-section" id="sample">
-            <header data-reveal><span>01</span><h2>Working sample</h2><p>Switch views to see the surface you would take over. Figures are sample data.</p></header>
+            <header data-reveal><span>02</span><h2>Working sample</h2><p>Switch views to see the surface you would take over. Figures are sample data.</p></header>
             <div data-tilt><ProductSurface asset={asset} /></div>
           </section>
 
           <section className="asset-section" id="numbers">
-            <header data-reveal><span>02</span><h2>The numbers</h2><p>Twelve months of the record&apos;s main measure, with the money around it where it applies.</p></header>
+            <header data-reveal><span>03</span><h2>The numbers</h2><p>Twelve months of the record&apos;s main measure, with the money around it where it applies.</p></header>
             <div data-reveal><Chart values={dossier.series.values} label={dossier.series.label} /></div>
             <dl className="numbers-row" data-reveal>
               <div><dt>Revenue</dt><dd>{dossier.financials?.revenue ?? "Not applicable"}</dd></div>
@@ -102,7 +116,7 @@ export default async function AssetPage({ params }: Props) {
           </section>
 
           <section className="asset-section" id="condition">
-            <header data-reveal><span>03</span><h2>Condition ledger</h2><p>Written plainly: what works, what depends on someone else, and what does not come with it.</p></header>
+            <header data-reveal><span>04</span><h2>Condition ledger</h2><p>Written plainly: what works, what depends on someone else, and what does not come with it.</p></header>
             <div className="condition-ledger">
               {([["Works today", asset.works], ["Depends on", asset.depends], ["Not included", asset.excluded]] as const).map(([title, items]) => (
                 <div key={title} data-reveal><h3>{title}</h3><ul>{items.map((item) => <li key={item}>{item}</li>)}</ul></div>
@@ -115,7 +129,7 @@ export default async function AssetPage({ params }: Props) {
           </section>
 
           <section className="asset-section" id="evidence">
-            <header data-reveal><span>04</span><h2>Evidence on file</h2><p>What the review desk has seen. Verified items were checked; provided items were supplied by the seller.</p></header>
+            <header data-reveal><span>05</span><h2>Evidence on file</h2><p>What the review desk has seen. Verified items were checked; provided items were supplied by the seller.</p></header>
             <ol className="evidence-ledger">
               {dossier.evidence.map(([item, status], index) => (
                 <li key={item} data-reveal><span>{String(index + 1).padStart(2, "0")}</span><strong>{item}</strong><b className={`evidence-stamp is-${status.toLowerCase().replace(" ", "-")}`}>{status}</b></li>
@@ -124,7 +138,7 @@ export default async function AssetPage({ params }: Props) {
           </section>
 
           <section className="asset-section" id="route">
-            <header data-reveal><span>05</span><h2>Transfer route</h2><p>{asset.route}. Indicative window: {asset.transferWindow}.</p></header>
+            <header data-reveal><span>06</span><h2>Transfer route</h2><p>{asset.route}. Indicative window: {asset.transferWindow}.</p></header>
             <ol className="route-line">
               <i data-rule aria-hidden="true" />
               {route.map(([title, copy], index) => <li key={title} data-reveal><span>{String(index + 1).padStart(2, "0")}</span><strong>{title}</strong><p>{copy}</p></li>)}
@@ -132,7 +146,7 @@ export default async function AssetPage({ params }: Props) {
           </section>
 
           <section className="asset-section seller-brief" id="seller">
-            <header data-reveal><span>06</span><h2>Seller brief</h2><p>Seller identity is checked privately and shared once an enquiry is accepted.</p></header>
+            <header data-reveal><span>07</span><h2>Seller brief</h2><p>Seller identity is checked privately and shared once an enquiry is accepted.</p></header>
             <div className="brief-grid">
               <dl data-reveal>
                 <div><dt>Seller</dt><dd>{dossier.seller.role}</dd></div>
@@ -153,9 +167,14 @@ export default async function AssetPage({ params }: Props) {
             </div>
           </section>
 
+          <section className="asset-section" id="reviews">
+            <header data-reveal><span>08</span><h2>Buyer reviews</h2><p>Written by buyers after a transfer or during a licence. Each is moderated before it appears.</p></header>
+            <ProductReviews reviews={reviews} closed={closed} name={asset.name} />
+          </section>
+
           <section className="asset-section" id="enquire">
-            <header data-reveal><span>07</span><h2>{closed ? "Ask about similar assets" : "Private enquiry"}</h2><p>{closed ? `This record is ${statusLabel[asset.status].toLowerCase()}. Tell us what you need and the review desk will reply when a comparable asset is listed.` : "Your message goes to the Mayank review desk first. Seller contact details are shared only after the enquiry is accepted."}</p></header>
-            <div data-reveal><EnquiryForm asset={asset} /></div>
+            <header data-reveal><span>09</span><h2>{closed ? "Ask about similar assets" : "Private enquiry"}</h2><p>{closed ? `This record is ${statusLabel[asset.status].toLowerCase()}. Tell us what you need and the review desk will reply when a comparable asset is listed.` : "Your message goes to the Mayank review desk first. Seller contact details are shared only after the enquiry is accepted."}</p></header>
+            <div data-reveal><EnquiryForm target={{ key: asset.slug, id: asset.id, closed: asset.status !== "live", deal: asset.deal }} /></div>
           </section>
         </div>
 
@@ -171,9 +190,12 @@ export default async function AssetPage({ params }: Props) {
             <div><dt>Transfer window</dt><dd>{asset.transferWindow}</dd></div>
           </dl>
           <ScrollLink target="enquire" className="btn btn-accent btn-wide">{closed ? "Ask about similar assets" : "Begin private enquiry"}<span>{closed ? "Record closed" : "No payment taken"}</span></ScrollLink>
+          <div className="sheet-tools"><SaveButton slug={asset.slug} /><ShareButton title={`${asset.name} on Mayank`} /></div>
           <small>Mayank checks identity, ownership, condition and route before an introduction. It is not the seller or an escrow provider.</small>
         </aside>
       </div>
+
+      <StickyEnquiry price={formatPrice(asset)} label={closed ? "Ask about similar" : "Enquire"} />
 
       <section className="similar-records" aria-labelledby="similar-title">
         <header><span className="label">On file nearby</span><h2 id="similar-title">Similar records</h2></header>

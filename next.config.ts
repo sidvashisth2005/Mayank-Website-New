@@ -1,15 +1,33 @@
 import type { NextConfig } from "next";
 
-// Everything the site loads is served from its own origin: fonts are bundled,
-// images are local and the forms post to our own API. Inline scripts are
-// allowed because Next.js streams page data through them on static pages.
+// The site serves its own fonts, images and API. The only outside origins are
+// Clerk (sign-in), Cloudflare Turnstile (Clerk's bot check) and Vercel Blob
+// (listing images). Clerk's host is read from the publishable key, so the
+// policy names this instance only, not every Clerk customer. Inline scripts
+// are allowed because Next.js streams page data through them.
+function clerkHost() {
+  const key = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY ?? "";
+  try {
+    const host = Buffer.from(key.split("_")[2] ?? "", "base64").toString("utf8").replace(/\$$/, "");
+    return /^[a-z0-9.-]+$/i.test(host) ? `https://${host}` : "";
+  } catch {
+    return "";
+  }
+}
+
+const clerk = clerkHost();
+const turnstile = "https://challenges.cloudflare.com";
+const blob = "https://*.public.blob.vercel-storage.com";
+
 const contentSecurityPolicy = [
   "default-src 'self'",
-  "script-src 'self' 'unsafe-inline'",
+  `script-src 'self' 'unsafe-inline' ${clerk} ${turnstile}`,
   "style-src 'self' 'unsafe-inline'",
-  "img-src 'self' data: blob:",
+  `img-src 'self' data: blob: https://img.clerk.com ${blob}`,
   "font-src 'self' data:",
-  "connect-src 'self'",
+  `connect-src 'self' ${clerk} https://clerk-telemetry.com`,
+  `frame-src ${turnstile}`,
+  "worker-src 'self' blob:",
   "frame-ancestors 'none'",
   "base-uri 'self'",
   "form-action 'self'",
@@ -30,7 +48,10 @@ const securityHeaders = [
 const nextConfig: NextConfig = {
   agentRules: false,
   poweredByHeader: false,
-  images: { formats: ["image/avif", "image/webp"] },
+  images: {
+    formats: ["image/avif", "image/webp"],
+    remotePatterns: [{ protocol: "https", hostname: "*.public.blob.vercel-storage.com" }],
+  },
   async headers() {
     // The development server needs eval for hot reloading, so the policy is
     // applied to production builds only.

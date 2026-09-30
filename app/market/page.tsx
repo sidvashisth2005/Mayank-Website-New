@@ -1,6 +1,8 @@
 import { Suspense, type CSSProperties } from "react";
 import type { Metadata } from "next";
 import { MarketBrowser, MarketFallback } from "@/components/mayank/MarketBrowser";
+import { MemberListings } from "@/components/mayank/MemberListings";
+import { MarketPulse } from "@/components/mayank/MarketPulse";
 import { PageMotion } from "@/components/mayank/PageMotion";
 import { TransitionLink } from "@/components/mayank/PageTransition";
 import { Chart } from "@/components/mayank/visuals/Chart";
@@ -14,6 +16,10 @@ export const metadata: Metadata = {
   title: "Market",
   description: "Browse reviewed startup-built products, code, domains, design systems and templates available to buy or rent.",
 };
+
+// Member listings come from the database; the page is rebuilt at most once a
+// minute and immediately when the review desk publishes a listing.
+export const revalidate = 60;
 
 export default function MarketPage() {
   const stats = marketStats();
@@ -60,9 +66,13 @@ export default function MarketPage() {
         </div>
       </section>
 
+      <MemberListings />
+
       <Suspense fallback={<MarketFallback />}>
         <MarketBrowser />
       </Suspense>
+
+      <MarketPulse />
 
       <section className="closed-ledger" aria-labelledby="closed-title">
         <header data-reveal><span className="label">Closed records</span><h2 id="closed-title">Recently transferred<br /><em>or licensed.</em></h2><p>Closed records stay on file so buyers can see how a finished transfer is recorded.</p></header>
